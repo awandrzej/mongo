@@ -27,7 +27,10 @@ import com.mongodb.MongoClient;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.bson.BasicBSONObject;
@@ -48,32 +51,45 @@ public class MultiArrayFindTest {
         System.out.println(one);
 
         System.out.println("\nFind all: ");
-        DBCursor cursor = collection.find(new BasicDBObject("scores.type", "homework"));
+        DBCursor cursor = collection.find().sort(new BasicDBObject("_id",1));
         System.out.println(cursor.count());
-        int i = 0; 
+        
         try {
           while (cursor.hasNext()) {
         	  
               int id = (Integer) cursor.next().get("_id");
+              //String s =  cursor.next().get("name");
         	  
+              Map<Integer,String> myMap = new HashMap<Integer,String>();
+              
               BasicBSONList bl = (BasicBSONList) cursor.next().get("scores");
         	  for (Object bo : bl){
         		  
         		  BasicBSONObject bo1 = (BasicBSONObject) bo;
-        		  if (bo1.containsValue("homework")){
+        		  System.out.println(bo);
         		  System.out.println(Integer.toString(id));
-                  System.out.println(bo1.get("score"));
-        		  }
-        	  }
-              
 
-        	  
+        		  	  if ( 1 > 1 ){
+        			  } 
+                      double total1 = Double.parseDouble(bo1.get("score").toString());
+        			  System.out.println("score1: "+ total1);
+        			  
+        			  myMap.put(id, bo1.get("score").toString());
+                      System.out.println("score: "+ myMap.get(id));
+
+                      double total = Double.parseDouble(myMap.get(id).toString());
+                      System.out.println("score: " + total);
+
+        		  //}
+        	  }
+         	  
            }
         
         } finally {
             cursor.close();
         }
 
+        
         System.out.println("\nCount:");
         long count = collection.count();
         System.out.println(count);
